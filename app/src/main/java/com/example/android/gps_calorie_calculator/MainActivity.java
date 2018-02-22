@@ -25,11 +25,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this,Run.class);
         startActivity(intent);
     }
-    public void CyclingForm(View v)
-    {
-        Intent intent = new Intent(this, Cycle.class);
-        startActivity(intent);
-    }
+
 
     public void WalkingForm(View v)
     {

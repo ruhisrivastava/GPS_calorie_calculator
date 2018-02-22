@@ -31,14 +31,6 @@
                 android:value="com.example.android.gps_calorie_calculator.MainActivity" />
         </activity>
         <activity
-            android:name="com.example.android.gps_calorie_calculator.Cycle"
-            android:label="@string/title_activity_cycle"
-            android:parentActivityName="com.example.android.gps_calorie_calculator.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.gps_calorie_calculator.MainActivity" />
-        </activity>
-        <activity
             android:name="com.example.android.gps_calorie_calculator.Walk"
             android:label="@string/title_activity_walk" >
         </activity>
