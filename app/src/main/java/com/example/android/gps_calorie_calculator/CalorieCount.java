@@ -1,57 +1,41 @@
 package com.example.android.gps_calorie_calculator;
 
+import java.text.DecimalFormat;
 
-        import java.io.IOException;
-        import java.io.InputStream;
-        import java.text.DecimalFormat;
-        import java.util.concurrent.TimeUnit;
-
-
-        import android.location.Criteria;
-        import android.location.Location;
-        import android.location.LocationListener;
-        import android.location.LocationManager;
-        import android.os.Bundle;
-        import android.os.PowerManager;
-        import android.os.PowerManager.WakeLock;
-        import android.os.SystemClock;
-        import android.support.v7.app.AppCompatActivity;
-        import android.support.v7.app.ActionBar;
-        import android.util.Log;
-        import android.view.Menu;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.view.ViewGroup.LayoutParams;
-        import android.view.WindowManager;
-
-        import android.widget.ImageView;
-        import android.widget.TextView;
-        import android.widget.Toast;
-        import android.support.v4.app.NavUtils;
-        import android.text.format.Time;
-        import android.annotation.TargetApi;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.graphics.Canvas;
-        import android.graphics.Color;
-        import android.graphics.Movie;
-        import android.graphics.drawable.AnimationDrawable;
-        import android.os.Build;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.os.PowerManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.text.format.Time;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 
 
 public class CalorieCount extends AppCompatActivity {
 
-    public int level,weight,age,rate;
+    public int level, weight, age, rate;
     public String scale;
     public float distance;
     public Location l;
-    public Time t1,t2;
+    public Time t1, t2;
     public LocationManager locationManager;
     public String mode;
-    public  PowerManager.WakeLock wl;
+    public PowerManager.WakeLock wl;
     AnimationDrawable runAnimation;
-    @SuppressWarnings("deprecation")
+
+    //  @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -60,40 +44,39 @@ public class CalorieCount extends AppCompatActivity {
 
         // Show the Up button in the action bar.
         Intent intent = getIntent();
-        l=null;
-        t1=new Time();
-        t2=new Time();
+        l = null;
+        t1 = new Time();
+        t2 = new Time();
         Bundle bundle = intent.getBundleExtra("data");
-        mode=bundle.getString("mode");
-        scale=bundle.getString("scale");
-        if(bundle.getString("weight").equalsIgnoreCase(""))
-            weight=0;
+        mode = bundle.getString("mode");
+        scale = bundle.getString("scale");
+        if (bundle.getString("weight").equalsIgnoreCase(""))
+            weight = 0;
         else
-            weight=Integer.parseInt(bundle.getString("weight"));
-        level=Integer.parseInt(bundle.getString("level"));
-        if(mode.equalsIgnoreCase("run"))
-        {
-            if(bundle.getString("age").equalsIgnoreCase(""))
-                age=0;
+            weight = Integer.parseInt(bundle.getString("weight"));
+        level = Integer.parseInt(bundle.getString("level"));
+        if (mode.equalsIgnoreCase("run")) {
+            if (bundle.getString("age").equalsIgnoreCase(""))
+                age = 0;
             else
 
-                age=Integer.parseInt(bundle.getString("age"));
-            if(bundle.getString("rate").equalsIgnoreCase(""))
-                rate=0;
+                age = Integer.parseInt(bundle.getString("age"));
+            if (bundle.getString("rate").equalsIgnoreCase(""))
+                rate = 0;
             else
-                rate=Integer.parseInt(bundle.getString("rate"));
+                rate = Integer.parseInt(bundle.getString("rate"));
         }
-        if(scale.equals("lb"))
-            weight=(int)(weight*0.453592);
+        if (scale.equals("lb"))
+            weight = (int) (weight * 0.453592);
         setupActionBar();
 
         String svcName = Context.LOCATION_SERVICE;
-        locationManager = (LocationManager)getSystemService(svcName);
+        locationManager = (LocationManager) getSystemService(svcName);
 
         ImageView rocketImage = (ImageView) findViewById(R.id.imageView1);
         rocketImage.setImageBitmap(null);
         rocketImage.setBackgroundResource(R.drawable.running);
-        runAnimation=(AnimationDrawable) rocketImage.getBackground();
+        runAnimation = (AnimationDrawable) rocketImage.getBackground();
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
         wl.acquire();
@@ -110,12 +93,13 @@ public class CalorieCount extends AppCompatActivity {
         criteria.setBearingRequired(false);
         criteria.setSpeedRequired(false);
         criteria.setCostAllowed(true);
-        String provider = locationManager.getBestProvider(criteria, true);
-        Log.i("provider is" ,provider);
-
-
-        locationManager.requestLocationUpdates(provider, 500, 1,
-                locationListener);
+      //  String provider = locationManager.getBestProvider(criteria, true);
+        //  Log.i("provider is" ,provider);
+           if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+               String[] permissions = { Manifest.permission.ACCESS_FINE_LOCATION};
+               ActivityCompat.requestPermissions(this, permissions, 1);
+            }
+         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 1, locationListener);
         //  Toast.makeText(this, "onResume()", Toast.LENGTH_LONG).show();
     }
     public void onPause() {
