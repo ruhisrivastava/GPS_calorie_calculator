@@ -26,7 +26,7 @@ public class Walk extends AppCompatActivity {
     public void onRun(View v)
     {
 
-        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+       final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
 
         if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
             buildAlertMessageNoGps();
@@ -63,11 +63,6 @@ public class Walk extends AppCompatActivity {
         final AlertDialog alert = builder.create();
         alert.show();
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.walk, menu);
-        return true;
-    }
+
 
 }
